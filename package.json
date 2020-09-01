@@ -1,23 +1,26 @@
 {
-  "name": "tokenevents-api",
-  "version": "1.0.0",
-  "description": "Api to schedule events",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leoaltemari/tokenEvents-API.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/leoaltemari/tokenEvents-API/issues"
-  },
-  "homepage": "https://github.com/leoaltemari/tokenEvents-API#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "nodemon": "^2.0.4"
-  }
+	"name": "tokenevents-api",
+	"version": "1.0.0",
+	"description": "Api to schedule events",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon ./bin/server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/leoaltemari/tokenEvents-API.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/leoaltemari/tokenEvents-API/issues"
+	},
+	"homepage": "https://github.com/leoaltemari/tokenEvents-API#readme",
+	"dependencies": {
+		"debug": "^4.1.1",
+		"express": "^4.17.1",
+		"http": "0.0.1-security",
+		"nodemon": "^2.0.4"
+	}
 }
