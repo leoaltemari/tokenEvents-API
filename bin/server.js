@@ -31,7 +31,7 @@ function normalizePort(val) {
 	return false;
 }
 
-// Error handling function
+// Server error handling function
 function onError(error) {
 	if (error.syscall !== "listen") {
 		throw error;
