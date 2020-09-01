@@ -12,6 +12,7 @@ const app = express();
 const router = express.Router();
 
 // Load Routes
+const indexRoute = require("./routes/index-route");
 
 // Load Models
 
@@ -42,6 +43,7 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
+app.use("/", indexRoute);
 
 // Connect to the DB
 const uri = config.connectionString;
