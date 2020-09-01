@@ -1,0 +1,23 @@
+{
+  "name": "tokenevents-api",
+  "version": "1.0.0",
+  "description": "Api to schedule events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leoaltemari/tokenEvents-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leoaltemari/tokenEvents-API/issues"
+  },
+  "homepage": "https://github.com/leoaltemari/tokenEvents-API#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
