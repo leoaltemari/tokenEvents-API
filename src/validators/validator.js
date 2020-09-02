@@ -48,6 +48,25 @@ ValidationContract.prototype.isHigher = (data, value, message) => {
 	if (data > value) errors.push({ message: message });
 };
 
+ValidationContract.prototype.validDate = (date, hour, message) => {
+	const nowDate = new Date();
+	const day = parseInt(date.slice(8, 10));
+	const month = parseInt(date.slice(5, 7));
+	const year = parseInt(date.slice(0, 4));
+
+	if (
+		hour >= 24 ||
+		hour < 0 ||
+		day < 0 ||
+		day > 31 ||
+		month > 12 ||
+		month <= 0 ||
+		year < nowDate.getFullYear()
+	) {
+		errors.push({ message: message });
+	}
+};
+
 ValidationContract.prototype.errors = () => {
 	return errors;
 };
@@ -57,7 +76,7 @@ ValidationContract.prototype.clear = () => {
 };
 
 ValidationContract.prototype.isValid = () => {
-	return errors.length == 0;
+	return errors.length === 0;
 };
 
 module.exports = ValidationContract;
