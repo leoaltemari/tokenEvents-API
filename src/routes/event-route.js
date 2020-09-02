@@ -7,7 +7,6 @@ const authService = require("../services/auth-service");
 
 // GET
 router.get("/", controller.get);
-// router.get("/:id", controller.getById);
 router.get("/:date", controller.getByDate);
 router.get("/user/:id", authService.authorize, controller.getByUserId);
 
@@ -18,6 +17,6 @@ router.post("/", authService.authorize, controller.post);
 router.put("/:id", authService.authorize, controller.put);
 
 // DELETE
-router.delete("/:id", controller.delete);
+router.delete("/:id", authService.authorize, controller.delete);
 
 module.exports = router;
