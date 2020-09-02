@@ -8,9 +8,9 @@ const authService = require("../services/auth-service");
 // Controllers
 exports.authenticate = async (req, res, next) => {
 	try {
-		const customer = await repository.authenticate(req.params);
+		const customer = await repository.authenticate(req.body);
 		if (!customer) {
-			res.status(200).send({ message: "Email ou senha inválidos!" });
+			res.status(202).send({ message: "Email ou senha inválidos!" });
 			return;
 		}
 
@@ -22,7 +22,7 @@ exports.authenticate = async (req, res, next) => {
 			roles: customer.roles,
 		});
 
-		res.status(201).send({
+		res.status(200).send({
 			token: token,
 			data: customer,
 		});
@@ -60,7 +60,26 @@ exports.post = async (req, res, next) => {
 			});
 			res.status(201).send({ message: "Cadastro efetuado com sucesso!" });
 		} else {
-			res.status(200).send(userValidator.getErrors());
+			res.status(202).send(userValidator.getErrors());
+		}
+	} catch (err) {
+		res.status(500).send({
+			message: "Falha ao processar requisição",
+			err: err.message,
+			code: err.code,
+		});
+	}
+};
+
+exports.postInvitation = async (req, res, next) => {
+	try {
+		const result = await repository.invite(req.body);
+		if (!result) {
+			res.status(202).send({
+				message: "Digite todos os campos para enviar o convite!",
+			});
+		} else {
+			res.status(201).send({ message: "Convite enviado com sucesso!" });
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -77,13 +96,13 @@ exports.put = async (req, res, next) => {
 		if (userValidator.putValidation(req.body)) {
 			const resUpdate = await repository.update(req.params.id, req.body);
 			if (resUpdate === null) {
-				res.status(200).send([
+				res.status(202).send([
 					{
 						message: "Este email já está em uso!",
 					},
 				]);
 			} else {
-				res.status(200).send({
+				res.status(201).send({
 					message: "Informações atualizadas com sucesso!",
 				});
 			}
@@ -99,11 +118,33 @@ exports.put = async (req, res, next) => {
 	}
 };
 
+exports.setInvitationStatus = async (req, res, next) => {
+	try {
+		const result = await repository.setInvitationStatus(req.body);
+
+		if (result) {
+			res.status(202).send({
+				message: "Status alterado com sucesso!",
+			});
+		} else {
+			res.status(201).send({
+				message: "Informações comprometidas",
+			});
+		}
+	} catch (err) {
+		res.status(500).send({
+			message: "Falha ao processar requisição",
+			err: err.message,
+			code: err.code,
+		});
+	}
+};
+
 exports.delete = async (req, res, next) => {
 	try {
 		const cb = await repository.delete(req.params.id);
 		if (cb === null) {
-			res.status(200).send({
+			res.status(202).send({
 				message: "Usuário não encontrado!",
 			});
 		} else {

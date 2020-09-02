@@ -71,7 +71,7 @@ exports.post = async (req, res, next) => {
 				res.status(201).send({ message: "Evento criado com sucesso!" });
 			}
 		} else {
-			res.status(200).send(eventValidator.getErrors());
+			res.status(202).send(eventValidator.getErrors());
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -87,11 +87,11 @@ exports.put = async (req, res, next) => {
 		const eventValidator = new EventValidator();
 		if (eventValidator.putValidation(req.body)) {
 			await repository.update(req.params.id, req.body);
-			res.status(200).send({
+			res.status(201).send({
 				message: "Informações atualizadas com sucesso!",
 			});
 		} else {
-			res.status(200).send(eventValidator.getErrors());
+			res.status(202).send(eventValidator.getErrors());
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -106,7 +106,7 @@ exports.delete = async (req, res, next) => {
 	try {
 		const cb = await repository.delete(req.params.id);
 		if (cb === null) {
-			res.status(200).send({
+			res.status(202).send({
 				message: "Evento não encontrado!",
 			});
 		} else {

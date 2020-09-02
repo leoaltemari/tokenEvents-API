@@ -17,6 +17,22 @@ const schema = mongoose.Schema({
 		type: String,
 		required: [true, "A senha de usuário é obrigatória"],
 	},
+	invitations: [
+		{
+			whoInvited: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+			},
+			event: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Event",
+			},
+			accepted: {
+				type: Boolean,
+				deafult: false,
+			},
+		},
+	],
 	roles: [
 		{
 			type: String,

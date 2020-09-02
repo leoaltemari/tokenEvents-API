@@ -17,6 +17,31 @@ exports.authenticate = async data => {
 	return res;
 };
 
+exports.invite = async data => {
+	if (!data.email || !data.whoInvited || !data.event) {
+		return null;
+	}
+
+	const userInvitedEmail = data.email;
+	const newInvitation = {
+		whoInvited: data.whoInvited,
+		event: data.event,
+		accepted: false,
+	};
+
+	let userInvitation = await User.findOne(
+		{ email: userInvitedEmail },
+		"invitations"
+	);
+
+	userInvitation.invitations.push(newInvitation);
+	const res = await User.findOneAndUpdate(
+		{ email: userInvitedEmail },
+		{ invitations: userInvitation.invitations }
+	);
+	return res;
+};
+
 exports.get = async () => {
 	const res = await User.find();
 	return res;
@@ -47,6 +72,29 @@ exports.update = async (id, body, file) => {
 	}
 
 	const res = await User.findByIdAndUpdate(id, query);
+	return res;
+};
+
+exports.setInvitationStatus = async data => {
+	if (!data.status || !data.event) {
+		return null;
+	}
+
+	const status = data.status;
+	const eventId = data.event;
+	const userId = data.user;
+
+	const user = await User.findById(userId);
+	let _invitations = user.invitations;
+	_invitations.forEach(item => {
+		if (item.event.toString() == eventId) {
+			item.accepted = status;
+		}
+	});
+
+	const res = await User.findByIdAndUpdate(userId, {
+		invitations: _invitations,
+	});
 	return res;
 };
 
