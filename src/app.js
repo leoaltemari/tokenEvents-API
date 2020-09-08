@@ -11,11 +11,9 @@ const config = require("./config");
 const app = express();
 const router = express.Router();
 
-// Load Routes
-const indexRoute = require("./routes/index-route");
-const userRoute = require("./routes/user-route");
-
 // Load Models
+const User = require("./models/User");
+const Event = require("./models/Event");
 
 // MiddleWares
 app.use(express.json());
@@ -43,9 +41,15 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Load Routes
+const indexRoute = require("./routes/index-route");
+const userRoute = require("./routes/user-route");
+const eventRoute = require("./routes/event-route");
+
 // Routes
 app.use("/", indexRoute);
 app.use("/user", userRoute);
+app.use("/events", eventRoute);
 
 // Connect to the DB
 const uri = config.connectionString;
