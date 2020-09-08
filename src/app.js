@@ -19,7 +19,7 @@ const Event = require("./models/Event");
 app.use(express.json());
 app.use(express.static("public"));
 
-// Cors
+// MiddleWare - Cors
 app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header(
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-// Body-Parser
+// MiddleWares - Body-Parser
 app.use(
 	bodyParser.json({
 		limit: "1mb",

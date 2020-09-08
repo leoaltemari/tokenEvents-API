@@ -1,15 +1,19 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 
+// Generates a new user token
 exports.generateToken = async data => {
 	return jwt.sign(data, global.SALT_KEY, { expiresIn: "6h" });
 };
 
+// Checks the token information passed
 exports.decodeToken = async token => {
 	const data = await jwt.verify(token, global.SALT_KEY);
 	return data;
 };
 
+// Middleware to check if the user that makes a request has 
+// authorization to access that route
 exports.authorize = function (req, res, next) {
 	let token =
 		req.body.token ||
@@ -34,6 +38,8 @@ exports.authorize = function (req, res, next) {
 	}
 };
 
+// Middleware to check if the user that makes a request has 
+// admin authorization to access that route
 exports.isAdmin = function (req, res, next) {
 	let token =
 		req.body.token ||
