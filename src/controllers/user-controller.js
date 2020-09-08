@@ -52,17 +52,24 @@ exports.post = async (req, res, next) => {
 	try {
 		const userValidator = new UserValidator();
 		if (userValidator.postValidation(req.body)) {
-			await repository.create({
+			const data = await repository.create({
 				name: req.body.name,
 				email: req.body.email,
 				password: md5(req.body.password + global.SALT_KEY),
 				roles: ["user"],
 			});
-			res.status(201).send({ message: "Cadastro efetuado com sucesso!" });
+			if (data === null) {
+				res.status(202).send({ message: "Este Email já está em uso!" });
+			} else {
+				res.status(201).send({
+					message: "Cadastro efetuado com sucesso!",
+				});
+			}
 		} else {
 			res.status(202).send(userValidator.getErrors());
 		}
 	} catch (err) {
+		console.log(err);
 		res.status(500).send({
 			message: "Falha ao processar requisição",
 			err: err.message,
@@ -76,10 +83,12 @@ exports.postInvitation = async (req, res, next) => {
 		const result = await repository.invite(req.body);
 		if (!result) {
 			res.status(202).send({
-				message: "Digite todos os campos para enviar o convite!",
+				message: "O email digitado não existe!",
 			});
 		} else {
-			res.status(201).send({ message: "Convite enviado com sucesso!" });
+			res.status(201).send({
+				message: "Convite enviado com sucesso!",
+			});
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -107,7 +116,7 @@ exports.put = async (req, res, next) => {
 				});
 			}
 		} else {
-			res.status(200).send(userValidator.getErrors());
+			res.status(202).send(userValidator.getErrors());
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -121,10 +130,10 @@ exports.put = async (req, res, next) => {
 exports.setInvitationStatus = async (req, res, next) => {
 	try {
 		const result = await repository.setInvitationStatus(req.body);
-
 		if (result) {
 			res.status(202).send({
 				message: "Status alterado com sucesso!",
+				user: result,
 			});
 		} else {
 			res.status(201).send({

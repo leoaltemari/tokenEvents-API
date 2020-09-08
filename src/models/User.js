@@ -28,8 +28,8 @@ const schema = mongoose.Schema({
 				ref: "Event",
 			},
 			accepted: {
-				type: Boolean,
-				deafult: false,
+				type: String,
+				deafult: "unset",
 			},
 		},
 	],

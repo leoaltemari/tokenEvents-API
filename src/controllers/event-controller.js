@@ -45,7 +45,6 @@ exports.getByUserId = async (req, res, next) => {
 
 exports.getByDate = async (req, res, next) => {
 	try {
-		console.log(req.params.date);
 		const data = await repository.getByDate(req.params.date);
 		res.status(200).send(data);
 	} catch (err) {

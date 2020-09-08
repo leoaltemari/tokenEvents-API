@@ -6,7 +6,6 @@ const controller = require("../controllers/user-controller");
 const authService = require("../services/auth-service");
 
 // GET
-
 router.get("/:id", controller.getById);
 
 // POST

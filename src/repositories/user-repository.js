@@ -4,6 +4,10 @@ const User = require("../models/User");
 const md5 = require("md5");
 
 exports.create = async data => {
+	const alreadyExist = await User.findOne({ email: data.email });
+	if (alreadyExist) {
+		return null;
+	}
 	var user = new User(data);
 	await user.save();
 };
@@ -13,7 +17,14 @@ exports.authenticate = async data => {
 		email: data.email,
 		password: md5(data.password + global.SALT_KEY),
 	};
-	const res = await User.findOne(query);
+	const res = await User.findOne(query)
+		.populate("invitations", "event, whoInvited, accepted")
+		.populate("invitations.whoInvited", "name")
+		.populate(
+			"invitations.event",
+			"name description startDate startHour finishDate finishHour"
+		);
+
 	return res;
 };
 
@@ -26,13 +37,17 @@ exports.invite = async data => {
 	const newInvitation = {
 		whoInvited: data.whoInvited,
 		event: data.event,
-		accepted: false,
+		accepted: "unset",
 	};
 
 	let userInvitation = await User.findOne(
 		{ email: userInvitedEmail },
 		"invitations"
 	);
+
+	if (userInvitation === null) {
+		return null;
+	}
 
 	userInvitation.invitations.push(newInvitation);
 	const res = await User.findOneAndUpdate(
@@ -94,7 +109,19 @@ exports.setInvitationStatus = async data => {
 
 	const res = await User.findByIdAndUpdate(userId, {
 		invitations: _invitations,
+	})
+		.populate("invitations", "event, whoInvited, accepted")
+		.populate("invitations.whoInvited", "name")
+		.populate(
+			"invitations.event",
+			"name description startDate startHour finishDate finishHour"
+		);
+	res.invitations.forEach(item => {
+		if (item.event._id == data.event) {
+			item.accepted = status;
+		}
 	});
+
 	return res;
 };
 

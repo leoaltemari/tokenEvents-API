@@ -8,7 +8,7 @@ const authService = require("../services/auth-service");
 // GET
 router.get("/", controller.get);
 router.get("/:date", controller.getByDate);
-router.get("/user/:id", authService.authorize, controller.getByUserId);
+router.get("/user/:id/:token", authService.authorize, controller.getByUserId);
 
 // POST
 router.post("/", authService.authorize, controller.post);
@@ -17,6 +17,6 @@ router.post("/", authService.authorize, controller.post);
 router.put("/:id", authService.authorize, controller.put);
 
 // DELETE
-router.delete("/:id", authService.authorize, controller.delete);
+router.delete("/:token/:id", authService.authorize, controller.delete);
 
 module.exports = router;
