@@ -61,10 +61,12 @@ exports.getByUserId = async userId => {
 exports.getByDate = async date => {
 	const startDateArgument = new Date(date);
 	startDateArgument.setHours(startDateArgument.getHours() - 3);
+	startDateArgument.setMonth(startDateArgument.getMonth() + 1);
 
 	const finishDateArgument = new Date(date);
 	finishDateArgument.setHours(finishDateArgument.getHours() - 3);
 	finishDateArgument.setUTCDate(finishDateArgument.getUTCDate() + 1);
+	finishDateArgument.setMonth(finishDateArgument.getMonth() + 1);
 
 	const query = {
 		$or: [
@@ -106,14 +108,19 @@ exports.update = async (eventId, data) => {
 
 	if (data.startDate) {
 		const startDateArgument = new Date(data.startDate);
-		startDateArgument.setHours(data.startHour - 3);
+
+		if (data.startHour >= 3) startDateArgument.setHours(data.startHour - 3);
+
 		query.startDate = startDateArgument;
 		query.startHour = data.startHour > 0 ? data.startHour : 0;
 	}
 
 	if (data.finishDate) {
 		const finishDateArgument = new Date(data.finishDate);
-		finishDateArgument.setHours(data.finishHour - 3);
+
+		if (data.finishHour >= 3)
+			finishDateArgument.setHours(data.finishHour - 3);
+
 		query.finishDate = finishDateArgument;
 		query.finishHour = data.finishHour > 0 ? data.finishHour : 0;
 	}
@@ -123,6 +130,6 @@ exports.update = async (eventId, data) => {
 };
 
 exports.delete = async id => {
-	const res = await Event.findOneAndRemove(id);
+	const res = await Event.findByIdAndRemove(id);
 	return res;
 };

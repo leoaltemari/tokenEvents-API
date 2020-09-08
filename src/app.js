@@ -49,7 +49,7 @@ const eventRoute = require("./routes/event-route");
 // Routes
 app.use("/", indexRoute);
 app.use("/user", userRoute);
-app.use("/event", eventRoute);
+app.use("/events", eventRoute);
 
 // Connect to the DB
 const uri = config.connectionString;
