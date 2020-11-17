@@ -51,6 +51,16 @@ EventValidation.prototype.postValidation = data => {
 		"Entre com uma data válida para o evento terminar!"
 	);
 
+	validator.compareDates(
+		data.startDate,
+		data.finishDate,
+		data.startHour,
+		data.finishHour,
+		"A data de inicio deve preceder a data de fim."
+	);
+
+	const startDate = new Date(data.startDate);
+	const finishDate = new Date(data.finishDate);
 	if (validator.isValid()) {
 		return true;
 	}

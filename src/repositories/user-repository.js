@@ -27,7 +27,7 @@ exports.authenticate = async data => {
 	};
 
 	// Returns ALL the user data(but the password)
-	const res = await User.findOne(query)
+	const res = await User.findOne(query, "-password")
 		.populate("invitations", "event, whoInvited, accepted")
 		.populate("invitations.whoInvited", "name")
 		.populate(
@@ -92,8 +92,9 @@ exports.update = async (id, body, file) => {
 
 	if (body.email) {
 		query.email = body.email;
-		const findEmail = await User.findOne({ email: body.email });
-		if (findEmail != null) {
+		const findUser = await User.findOne({ email: body.email });
+
+		if (findUser && findUser.email === body.email && findUser._id != id) {
 			return null;
 		}
 	}
@@ -104,6 +105,7 @@ exports.update = async (id, body, file) => {
 
 	// Update and returns the user data before updates
 	const res = await User.findByIdAndUpdate(id, query);
+
 	return res;
 };
 

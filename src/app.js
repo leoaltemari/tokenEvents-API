@@ -15,12 +15,10 @@ const router = express.Router();
 const User = require("./models/User");
 const Event = require("./models/Event");
 
-// MiddleWares
-app.use(express.json());
-app.use(express.static("public"));
+//MiddleWares;
 
-// MiddleWare - Cors
-app.use(function (req, res, next) {
+//MiddleWare - Cors;
+app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header(
 		"Access-Control-Allow-Headers",
@@ -30,10 +28,13 @@ app.use(function (req, res, next) {
 		"Access-Control-Allow-Methods",
 		"GET, POST, PUT, DELETE, OPTIONS"
 	);
+	app.use(cors());
 	next();
 });
 
 // MiddleWares - Body-Parser
+app.use(express.json());
+app.use(express.static("public"));
 app.use(
 	bodyParser.json({
 		limit: "1mb",

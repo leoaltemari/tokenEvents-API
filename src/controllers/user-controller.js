@@ -26,7 +26,12 @@ exports.authenticate = async (req, res, next) => {
 
 		// User not found
 		if (!customer) {
-			res.status(202).send({ message: "Email ou senha inválidos!" });
+			res.status(202).send({
+				ok: false,
+				token: null,
+				data: null,
+				errors: ["Email ou senha inválidos!"],
+			});
 			return;
 		}
 
@@ -40,8 +45,10 @@ exports.authenticate = async (req, res, next) => {
 
 		// Returns the token and user data
 		res.status(200).send({
+			ok: true,
 			token: token,
 			data: customer,
+			errors: null,
 		});
 	} catch (err) {
 		res.status(500).send({
@@ -84,11 +91,15 @@ exports.post = async (req, res, next) => {
 
 			// Error
 			if (data === null) {
-				res.status(202).send({ message: "Este Email já está em uso!" });
+				res.status(202).send({
+					message: "Este Email já está em uso!",
+					ok: false,
+				});
 			} else {
 				res.status(201).send({
 					// Success
 					message: "Cadastro efetuado com sucesso!",
+					ok: true,
 				});
 			}
 		} else {
@@ -141,20 +152,23 @@ exports.put = async (req, res, next) => {
 
 			// Email already exists
 			if (resUpdate === null) {
-				res.status(202).send([
-					{
-						message: "Este email já está em uso!",
-					},
-				]);
+				res.status(202).send({
+					message: "Este email já está em uso!",
+					ok: false,
+				});
 			} else {
 				res.status(201).send({
 					// Success
-					message: "Informações atualizadas com sucesso!",
+					data: { message: "Informações atualizadas com sucesso!" },
+					ok: true,
 				});
 			}
 		} else {
 			// Error in the input data
-			res.status(202).send(userValidator.getErrors());
+			res.status(202).send({
+				data: { errors: userValidator.getErrors() },
+				ok: false,
+			});
 		}
 	} catch (err) {
 		res.status(500).send({

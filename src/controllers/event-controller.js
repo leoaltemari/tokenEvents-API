@@ -3,7 +3,6 @@
 const repository = require("../repositories/event-repository");
 const EventValidator = require("../validators/event-validator");
 
-
 /* 	OBS: If there is any problem in the route or in the request all the controllers will
 	return an object with the error that ocours, containing a message, the error and the
 	error code :
@@ -89,15 +88,25 @@ exports.post = async (req, res, next) => {
 			// Date conflict
 			if (result === null) {
 				res.status(202).send({
+					ok: false,
+					errors: [],
 					message:
-						"Você já possui um evento neste horário, por favor selcione outro horário",
+						"Você já possui um evento neste horário, por favor selcione outro horário.",
 				});
 			} else {
 				// Success
-				res.status(201).send({ message: "Evento criado com sucesso!" });
+				res.status(201).send({
+					ok: true,
+					errors: [],
+					message: "Evento criado com sucesso!",
+				});
 			}
 		} else {
-			res.status(202).send(eventValidator.getErrors());
+			res.status(202).send({
+				ok: false,
+				errors: eventValidator.getErrors(),
+				message: "",
+			});
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -118,11 +127,17 @@ exports.put = async (req, res, next) => {
 
 			// Success
 			res.status(201).send({
+				ok: true,
+				errors: [],
 				message: "Informações atualizadas com sucesso!",
 			});
 		} else {
 			// Errors at the input validadtion
-			res.status(202).send(eventValidator.getErrors());
+			res.status(202).send({
+				ok: false,
+				errors: eventValidator.getErrors(),
+				message: "",
+			});
 		}
 	} catch (err) {
 		res.status(500).send({
@@ -141,11 +156,13 @@ exports.delete = async (req, res, next) => {
 		// Not found
 		if (cb === null) {
 			res.status(202).send({
+				ok: false,
 				message: "Evento não encontrado!",
 			});
 		} else {
 			// Success
 			res.status(200).send({
+				ok: true,
 				message: "Evento removido com sucesso!",
 			});
 		}

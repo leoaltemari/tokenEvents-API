@@ -8,6 +8,7 @@ const authService = require("../services/auth-service");
 // GET
 router.get("/", controller.get);
 router.get("/:date", controller.getByDate);
+router.get("/id/:id", controller.getById);
 router.get("/user/:id/:token", authService.authorize, controller.getByUserId);
 
 // POST

@@ -23,6 +23,7 @@ ValidationContract.prototype.isFixedLen = (value, len, message) => {
 };
 
 ValidationContract.prototype.isEmail = (value, message) => {
+	return;
 	let reg = new RegExp(
 		/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/gi
 	);
@@ -65,6 +66,29 @@ ValidationContract.prototype.validDate = (date, hour, message) => {
 	) {
 		errors.push({ message: message });
 	}
+};
+
+ValidationContract.prototype.compareDates = (
+	startDate,
+	finishDate,
+	startHour,
+	finishHour,
+	message
+) => {
+	const start = new Date(startDate);
+	const finish = new Date(finishDate);
+
+	if (start == finish) {
+		if (startHour >= finishHour) {
+			errors.push(message);
+			return;
+		}
+	}
+
+	if (start > finish) {
+		errors.push(message);
+	}
+	return;
 };
 
 ValidationContract.prototype.errors = () => {

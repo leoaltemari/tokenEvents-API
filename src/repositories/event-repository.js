@@ -5,18 +5,20 @@ const Event = require("../models/Event");
 // Creates a new Event
 exports.create = async data => {
 	// Access the current user events
+
 	const userId = data.creator;
 	const eventsById = await Event.find({ creator: userId });
 
 	// Updates the Date and hours to the BRT time pattern
 	// Start Date
 	const startDate = new Date(data.startDate);
-	startDate.setHours(data.startHour - 3);
+	startDate.setHours(startDate.getHours() + data.startHour, 0, 0);
+
 	data.startDate = startDate;
 
 	// Finish Date
 	const finishDate = new Date(data.finishDate);
-	finishDate.setHours(data.finishHour - 3);
+	finishDate.setHours(finishDate.getHours() + data.finishHour, 0, 0);
 	data.finishDate = finishDate;
 
 	// Filter the events with this query, to check if the user that is
@@ -55,7 +57,10 @@ exports.get = async () => {
 
 // Return ONE events by its ID
 exports.getById = async id => {
-	const res = await Event.findById(id);
+	const res = await await Event.findById(id).populate(
+		"creator",
+		"name email"
+	);
 	return res;
 };
 
@@ -75,12 +80,10 @@ exports.getByDate = async date => {
 	// Updates the date comming by the request to the BRT time pattern
 	const startDateArgument = new Date(date);
 	startDateArgument.setHours(startDateArgument.getHours() - 3);
-	startDateArgument.setMonth(startDateArgument.getMonth() + 1);
 
 	const finishDateArgument = new Date(date);
 	finishDateArgument.setHours(finishDateArgument.getHours() - 3);
 	finishDateArgument.setUTCDate(finishDateArgument.getUTCDate() + 1);
-	finishDateArgument.setMonth(finishDateArgument.getMonth() + 1);
 
 	// Query to select that events that starts in the date passed, finish in this date,
 	// or, if there are events that has more than one day of duration, it query checks
@@ -145,7 +148,6 @@ exports.update = async (eventId, data) => {
 		query.finishDate = finishDateArgument;
 		query.finishHour = data.finishHour > 0 ? data.finishHour : 0;
 	}
-
 
 	// Returns the updated event
 	const res = await Event.findByIdAndUpdate(eventId, query);
